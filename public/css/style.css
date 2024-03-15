@@ -1,1 +1,27 @@
-/* Placeholder for custom styles */
+/* Custom styles for StockRanker carousel and alignment adjustments */
+
+.carousel-item img {
+    max-height: 400px; /* Adjust the max height as appropriate for your layout */
+    margin: 0 auto; /* Center the image within the carousel item */
+}
+
+.carousel-caption {
+    background: rgba(0, 0, 0, 0.5); /* Semi-transparent background for text visibility */
+    border-radius: 5px; /* Rounded corners for the caption background */
+    padding: 10px; /* Padding inside the caption background */
+}
+
+.carousel-item {
+    text-align: center; /* Center align the text and content within each carousel item */
+}
+
+/* Additional styling adjustments for carousel alignment and responsiveness */
+.carousel {
+    margin-top: 20px; /* Space between the carousel and the page header/navigation */
+}
+
+@media (max-width: 768px) {
+    .carousel-item img {
+        max-height: 200px; /* Smaller max height for images on smaller screens */
+    }
+}

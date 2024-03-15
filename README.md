@@ -27,7 +27,7 @@ StockRanker utilizes a mixture of modern web technologies including Node.js and 
 
 1. Clone the repository to your local machine.
 2. Install the required dependencies by running `npm install` in the project directory.
-3. Set up your `.env` file based on the `.env.example` provided.
+3. Set up your `.env` file based on the `.env.example` provided. Make sure to include your AlphaVantage API key.
 4. Start the application using `npm start`.
 5. Navigate to `http://localhost:3000` in your web browser to view the app.
 

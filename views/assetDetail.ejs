@@ -5,15 +5,39 @@
 <%- include('partials/_header.ejs') %>
 <main role="main" class="container mt-4">
   <div id="assetInfo">
+    <h2><%= asset.name %> (<%= asset.ticker %>)</h2>
+    <p>Industry: <%= asset.industry %></p>
+    <p>Price: $<%= asset.price.toFixed(2) %></p>
+    <p>Vote Count: <%= asset.voteCount %></p>
+    <p>Comment Count: <%= asset.commentCount %></p>
     <!-- Asset information will be dynamically inserted using JavaScript -->
   </div>
   
   <div id="assetNews" class="mt-4">
+    <h2>News</h2>
     <!-- Asset news will be dynamically inserted using JavaScript -->
   </div>
   
   <div id="commentsSection" class="mt-4">
-    <!-- Comments will be dynamically inserted using JavaScript -->
+    <!-- Comments will be 
+      dynamically inserted using JavaScript -->
+    <h3>Comments</h3>
+    <div id="commentsContainer">
+      <!-- Comments will be dynamically inserted here -->
+    </div>
+    <form id="commentForm">
+      <input type="hidden" id="assetId" value="<%= asset._id %>">
+     
+      <div class="mb-3">
+        <label for="commentText" class="form-label">Your Comment</label>
+        <textarea class="form-control" id="commentText" rows="3" required></textarea>
+      </div>
+      <div class="mb-3">
+        <label for="commentAuthor" class="form-label">Your Name (optional)</label>
+        <input type="text" class="form-control" id="commentAuthor" placeholder="Anonymous">
+      </div>
+      <button type="submit" class="btn btn-primary">Submit Comment</button>
+    </form>
   </div>
 </main>
 </body>

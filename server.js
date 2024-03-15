@@ -9,14 +9,19 @@ const assetRoutes = require('./routes/assetRoutes');
 const commentRoutes = require('./routes/commentRoutes');
 const WebSocket = require('ws');
 const http = require('http');
+const axios = require('axios');
+const cors = require('cors'); // Added CORS support
+const axiosRateLimit = require('axios-rate-limit'); // For rate limiting API calls
 
-if (!process.env.DATABASE_URL || !process.env.SESSION_SECRET) {
+if (!process.env.DATABASE_URL || !process.env.SESSION_SECRET || !process.env.FINNHUB_API_KEY) {
   console.error("Error: config environment variables not set. Please create/edit .env configuration file.");
   process.exit(-1);
 }
 
 const app = express();
 const port = process.env.PORT || 3000;
+
+app.use(cors()); // Enable CORS for all routes
 
 // Middleware to parse request bodies
 app.use(express.urlencoded({ extended: true }));
@@ -94,6 +99,9 @@ app.use((err, req, res, next) => {
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 
+// Axios instance for Finnhub API with rate limiting
+const httpFinnhub = axiosRateLimit(axios.create(), { maxRPS: 30 });
+
 wss.on('connection', function connection(ws) {
   console.log('A new client connected');
   ws.on('message', function incoming(message) {
@@ -127,6 +135,23 @@ server.listen(port, () => {
 });
 
 async function fetchRealTimeAssetPrices() {
-  // This is a placeholder. In a real scenario, this would fetch data from an external API.
-  return { asset: 'AAPL', price: 150 }; // Example response
+  try {
+    const symbols = ['IBM', 'AAPL', 'GOOGL']; // Add more symbols as needed
+    let prices = [];
+    for (const symbol of symbols) {
+      const response = await httpFinnhub.get(`https://finnhub.io/api/v1/quote?symbol=${symbol}&token=${process.env.FINNHUB_API_KEY}`);
+      if (response.status === 200 && response.data) {
+        console.log("Real-time asset prices fetched successfully for", symbol);
+        const price = response.data.c; // Current price
+        prices.push({ asset: symbol, price });
+      } else {
+        console.error("Failed to fetch real-time asset prices for", symbol, ": Status code", response.status);
+      }
+    }
+    return prices;
+  } catch (err) {
+    console.error("Error fetching real-time asset prices:", err.message);
+    console.error(err.stack);
+    return []; // Return an empty array on error
+  }
 }

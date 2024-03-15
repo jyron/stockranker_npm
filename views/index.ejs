@@ -4,9 +4,6 @@
 <body>
 <%- include('partials/_header.ejs') %>
 <main role="main" class="container mt-4">
-  <div id="assetCarousel" class="carousel slide" data-ride="carousel">
-    <!-- Carousel items will be dynamically inserted using JavaScript -->
-  </div>
   
   <input type="text" id="searchAssets" placeholder="Search assets..." class="form-control mt-4">
   
@@ -20,6 +17,7 @@
         <th>Vote Count</th>
         <th>Comment Count</th>
         <th>Industry</th>
+        <th>Actions</th>
       </tr>
     </thead>
     <tbody id="assetsTable">
@@ -29,6 +27,10 @@
   
   <div id="popularConversations" class="mt-4">
     <!-- Popular conversations will be dynamically inserted using JavaScript -->
+    <h3>Popular Conversations</h3>
+    <div id="commentsContainer">
+      <!-- Comments will be dynamically inserted using JavaScript -->
+    </div>
   </div>
 </main>
 </body>

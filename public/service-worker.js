@@ -1,4 +1,4 @@
-const CACHE_NAME = 'stockranker-cache-v1';
+const CACHE_NAME = 'stockranker-cache-v2'; // Update the cache version to ensure updates are fetched
 const urlsToCache = [
   '/',
   '/css/style.css',
@@ -13,11 +13,11 @@ self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => {
-        console.log('Opened cache');
+        console.log('Service worker: Cache opened');
         return cache.addAll(urlsToCache);
       })
       .catch(err => {
-        console.error('Error opening cache during service worker install:', err);
+        console.error('Service worker: Error opening cache during service worker install:', err);
       })
   );
 });
@@ -49,7 +49,7 @@ self.addEventListener('fetch', event => {
                 cache.put(event.request, responseToCache);
               })
               .catch(err => {
-                console.error('Error opening cache to put new fetched response:', err);
+                console.error('Service worker: Error opening cache to put new fetched response:', err);
               });
 
             return response;
@@ -57,22 +57,23 @@ self.addEventListener('fetch', event => {
         );
       })
       .catch(err => {
-        console.error('Error fetching and caching new data:', err);
+        console.error('Service worker: Error fetching and caching new data:', err);
       })
   );
 });
 
-// Update a service worker
+// Update a service worker, clearing old cache
 self.addEventListener('activate', event => {
-  const cacheWhitelist = ['stockranker-cache-v1'];
+  const cacheWhitelist = [CACHE_NAME]; // Update the whitelist to only contain the new version
 
   event.waitUntil(
     caches.keys().then(cacheNames => {
       return Promise.all(
         cacheNames.map(cacheName => {
           if (cacheWhitelist.indexOf(cacheName) === -1) {
+            console.log(`Service worker: Deleting old cache: ${cacheName}`);
             return caches.delete(cacheName).catch(err => {
-              console.error('Error deleting old cache:', err);
+              console.error('Service worker: Error deleting old cache:', err);
             });
           }
         })

@@ -6,34 +6,15 @@ document.addEventListener('DOMContentLoaded', function() {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const data = await response.json();
-      populateCarousel(data);
-      populateTable(data);
+      
+      populateTable(data); // Removed populateCarousel call as requested
     } catch (error) {
       console.error('Failed to fetch assets:', error.message, error.stack);
+      document.getElementById('errorContainer').innerText = 'Failed to load assets. Please try again later.';
     }
   };
 
-  const populateCarousel = (assets) => {
-    const carouselInner = document.querySelector('#assetCarousel');
-    if (!carouselInner) {
-      console.error('Carousel element not found.');
-      return;
-    }
-    // Assuming carouselInner has the necessary structure or creating it dynamically
-    let carouselItems = '';
-    assets.forEach((asset, index) => {
-      carouselItems += `
-        <div class="carousel-item ${index === 0 ? 'active' : ''}">
-          <img src="${asset.logo}" class="d-block w-100" alt="${asset.name}">
-          <div class="carousel-caption d-none d-md-block">
-            <h5>${asset.name} (${asset.ticker})</h5>
-            <p>$${asset.price}</p>
-          </div>
-        </div>
-      `;
-    });
-    carouselInner.innerHTML = carouselItems;
-  };
+  // Removed the populateCarousel function as requested
 
   const populateTable = (assets) => {
     const tableBody = document.querySelector('#assetsTable');
@@ -46,17 +27,72 @@ document.addEventListener('DOMContentLoaded', function() {
       tableRows += `
         <tr>
           <td><img src="${asset.logo}" alt="${asset.name}" style="width: 50px;"></td>
-          <td>${asset.ticker}</td>
-          <td>${asset.name}</td>
+          <td><a href="/assets/${asset.ticker}/detail">${asset.ticker}</a></td>
+          <td><a href="/assets/${asset.ticker}/detail">${asset.name}</a></td>
           <td>$${asset.price}</td>
-          <td>${asset.voteCount}</td>
+          <td id="voteCount-${asset.ticker}">${asset.voteCount}</td>
           <td>${asset.commentCount}</td>
           <td>${asset.industry}</td>
+          <td>
+            <button class="vote-button" data-ticker="${asset.ticker}" data-vote="1">Upvote</button>
+            <button class="vote-button" data-ticker="${asset.ticker}" data-vote="-1">Downvote</button>
+          </td>
         </tr>
       `;
     });
     tableBody.innerHTML = tableRows;
+    attachVoteEventListeners();
   };
 
-  fetchAssets();
+  const searchAssets = (query) => {
+    fetch(`/assets?search=${query}`)
+      .then(response => response.json())
+      .then(data => {
+        populateTable(data);
+      })
+      .catch(error => {
+        console.error('Error searching assets:', error.message, error.stack);
+        document.getElementById('errorContainer').innerText = 'Error searching assets. Please try again.';
+      });
+  };
+
+  const searchInput = document.getElementById('searchAssets');
+  if (searchInput) {
+    searchInput.addEventListener('input', (e) => {
+      const query = e.target.value;
+      searchAssets(query);
+    });
+  }
+
+  const attachVoteEventListeners = () => {
+    document.querySelectorAll('.vote-button').forEach(button => {
+      button.addEventListener('click', function() {
+        const ticker = this.getAttribute('data-ticker');
+        const vote = parseInt(this.getAttribute('data-vote'), 10);
+        fetch(`/assets/${ticker}/vote`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ vote }),
+        })
+        .then(response => response.json())
+        .then(data => {
+          console.log('Vote updated:', data);
+          // Update the UI without reloading the page
+          const voteCountElement = document.getElementById(`voteCount-${ticker}`);
+          if (voteCountElement) {
+            voteCountElement.textContent = data.voteCount;
+          } else {
+            console.error(`Vote count element not found for ticker ${ticker}`);
+          }
+        })
+        .catch(error => {
+          console.error('Error voting on asset:', error.message, error.stack);
+        });
+      });
+    });
+  };
+
+  fetchAssets(); // Initial call to fetch assets and populate the table on page load
 });
