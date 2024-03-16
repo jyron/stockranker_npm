@@ -1,19 +1,17 @@
 # StockRanker
 
-StockRanker is a Progressive Web App (PWA) designed to enhance the experience of financial asset tracking across web and mobile platforms. It offers a comprehensive list of stocks and cryptocurrencies, allowing users to vote on these assets and engage in community discussions. The app aims to provide a seamless, engaging, and optimized experience for mobile users, featuring real-time or near-real-time updates on financial data.
+StockRanker is a Progressive Web App (PWA) designed to offer a seamless and engaging experience across both web and mobile platforms. It aims to provide users with comprehensive financial asset tracking, including stocks and cryptocurrencies, allowing for voting, commenting, and real-time data updates.
 
 ## Overview
 
-StockRanker utilizes a mixture of modern web technologies including Node.js and Express for backend operations, MongoDB for database management, and EJS, Bootstrap, and Vanilla JavaScript for the frontend. The application employs service workers and a web app manifest to offer offline functionality and a full-screen app-like experience. Real-time data updates are facilitated through integration with the AlphaVantage API, and the app supports email/password authentication for voting and commenting functionalities.
+The application is built on a Node.js and Express backend with MongoDB for data storage. The frontend utilizes EJS for templating, Bootstrap for responsive design, and Vanilla JavaScript for interactivity. StockRanker employs service workers and a web app manifest to enable PWA features like offline capability and home screen installation. Real-time updates are achieved through the integration with the AlphaVantage API.
 
 ## Features
 
-- Real-time or near-real-time financial data updates
-- User registration and login for personalized experiences
-- Anonymous and registered user commenting
-- Voting system for financial assets
-- Searchable and detailed financial asset information
-- Mobile-optimized design for ease of use on various devices
+- Comprehensive list of financial assets with real-time or near-real-time updates.
+- User registration and login for personalized experiences.
+- Community engagement through voting and commenting on assets.
+- Mobile-optimized design for a seamless experience across devices.
 
 ## Getting started
 
@@ -26,10 +24,9 @@ StockRanker utilizes a mixture of modern web technologies including Node.js and 
 ### Quickstart
 
 1. Clone the repository to your local machine.
-2. Install the required dependencies by running `npm install` in the project directory.
-3. Set up your `.env` file based on the `.env.example` provided. Make sure to include your AlphaVantage API key.
-4. Start the application using `npm start`.
-5. Navigate to `http://localhost:3000` in your web browser to view the app.
+2. Install the dependencies with `npm install`.
+3. Set up your `.env` file based on the `.env.example` provided.
+4. Start the application with `npm start` and navigate to `http://localhost:3000`.
 
 ### License
 
